@@ -4,7 +4,7 @@
     <title>Spring Security Example</title>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
+<h1>User panel</h1>
 <table>
     <tr>
         <th>ID</th>
@@ -15,9 +15,17 @@
     <tr th:each="user : ${listUser}">
         <td th:text="${user.id}"></td>
         <td th:text="${user.username}"></td>
-        <td th:text="${#strings.listJoin(user.roles, ', ', 'name')}"></td>
+        <td th:text="${#strings.listJoin(user.roles.![authority], ', ')}">User Roles></td>
     </tr>
 </table>
+
+</form>
+
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+
 
 </body>
 </html>

@@ -17,13 +17,14 @@
     <tr th:each="user : ${listUser}">
         <td th:text="${user.id}"></td>
         <td th:text="${user.username}"></td>
-        <td th:text="${user.roles}"></td>
+        <td th:text="${#strings.listJoin(user.roles.![authority], ', ')}"></td>
         <td>
 
             <form th:action="@{/admin/edit}" method="post">
                 <input type="hidden" name="id" th:value="${user.id}"/>
                 <input type="text" name="username" placeholder="New Username"/>
                 <input type="password" name="password" placeholder="New Password"/>
+                <input type="role" name="role" placeholder="New Role"/>
                 <button type="submit">Edit</button>
             </form>
 
@@ -41,10 +42,7 @@
 <form th:action="@{/admin/add}" method="post">
     <input type="text" name="username" placeholder="Username" required/>
     <input type="password" name="password" placeholder="Password" required/>
-    <select name="roleName">
-        <option value="ROLE_USER">USER</option>
-        <option value="ROLE_ADMIN">ADMIN</option>
-    </select>
+    <input type="role" name="role" placeholder="Role" required/>
     <button type="submit">Add</button>
 </form>
 

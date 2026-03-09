@@ -18,10 +18,9 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public User(){
+    public User() {
 
     }
-
 
 
     @Id
@@ -58,9 +57,13 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Set<Role> getRoles() { return roles; }
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
-    public void setRoles(Set<Role> roles) { this.roles = roles; }
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public String getRolesString() {
         return roles.stream()
@@ -107,8 +110,7 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", roles=" + roles +
                 '}';
