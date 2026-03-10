@@ -18,12 +18,12 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -36,9 +36,7 @@ public class UserServiceImpl implements UserService {
     public void saveUser(String username, String password, String roleName) {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User(username, encodedPassword);
-        Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
-        user.setRoles(Collections.singleton(role));
+        Role role = roleService.findByName(roleName);
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);

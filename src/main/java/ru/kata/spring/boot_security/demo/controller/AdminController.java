@@ -19,7 +19,7 @@ public class AdminController {
     }
 
     @GetMapping
-    public String adminPage(Model model) {
+    public String showAdminPage(Model model) {
         model.addAttribute("listUser", userService.showUsers());
         return "index";
     }
