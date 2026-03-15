@@ -12,6 +12,7 @@ public class DataInitializer implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final UserService userService;
 
+
     public DataInitializer(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
@@ -27,8 +28,12 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         if (userService.showUsers().isEmpty()) {
-            userService.saveUser("admin", "admin", "ROLE_ADMIN");
-            userService.saveUser("user", "user", "ROLE_USER");
+            userService.saveUser("admin", "111", "admin", 33, "admin@gmail.com", "ROLE_ADMIN");
+            userService.saveUser("user", "222", "user", 18, "user@gmail.com", "ROLE_USER");
         }
+
+
+
     }
+
 }

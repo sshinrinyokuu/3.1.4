@@ -20,9 +20,9 @@ public class UserController {
 
 
     @GetMapping
-    public String userPage(@AuthenticationPrincipal User user, Model model) {
+    public String showUserPage(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
-        model.addAttribute("listUser", userService.showUsers());
+        model.addAttribute("listOfUsers", userService.showUsers());
         return "user";
     }
 }

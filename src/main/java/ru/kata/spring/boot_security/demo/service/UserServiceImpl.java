@@ -6,10 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,9 +31,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(String username, String password, String roleName) {
+    public void saveUser(String username, String password, String lastName, Integer age, String email, String roleName) {
         String encodedPassword = passwordEncoder.encode(password);
-        User user = new User(username, encodedPassword);
+        User user = new User(username, encodedPassword, lastName, age, email);
         Role role = roleService.findByName(roleName);
         Set<Role> roles = new HashSet<>();
         roles.add(role);
@@ -49,15 +47,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void editUser(Long id, String username, String password) {
+    public void editUser(Long id,String username, String password, String lastName, Integer age, String email, String roleName) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setUsername(username);
+        user.setLastName(lastName);
+        user.setAge(age);
+        user.setEmail(email);
+
         if (password != null && !password.isEmpty()) {
-            String encodedPassword = passwordEncoder.encode(password);
-            user.setPassword(encodedPassword);
-            userRepository.save(user);
+            user.setPassword(passwordEncoder.encode(password));
         }
+        Role role = roleService.findByName(roleName);
+        Set<Role> roles = new HashSet<>();
+        if(roleName.equals("ROLE_ADMIN")) {
+            roles.add(roleService.findByName("ROLE_USER"));
+        }
+        roles.add(role);
+        user.setRoles(roles);
+        userRepository.save(user);
     }
+
 
     @Override
     public List<User> showUsers() {
