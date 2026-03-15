@@ -42,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .successHandler(successUserHandler)
                         .permitAll()
                 )
-                .logout(logout -> logout.permitAll());
+                .logout();
     }
 
 
