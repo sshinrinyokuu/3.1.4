@@ -47,6 +47,7 @@ public class AdminController {
                            @RequestParam("age") Integer age,
                            @RequestParam("email") String email) {
         userService.editUser(id, username, password, lastName, age, email, roles);
+        System.out.println("ID from form: " + id);
         return "redirect:/admin";
     }
 

@@ -9,6 +9,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User(username, encodedPassword, lastName, age, email);
         Role role = roleService.findByName(roleName);
-        Set<Role> roles = new HashSet<>();
+        Set<Role> roles = new LinkedHashSet<>();
         roles.add(role);
         user.setRoles(roles);
         userRepository.save(user);
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void editUser(Long id,String username, String password, String lastName, Integer age, String email, String roleName) {
+    public void editUser(Long id, String username, String password, String lastName, Integer age, String email, String roleName) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setUsername(username);
         user.setLastName(lastName);
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(password));
         }
         Role role = roleService.findByName(roleName);
-        Set<Role> roles = new HashSet<>();
+        Set<Role> roles = new LinkedHashSet<>();
         if(roleName.equals("ROLE_ADMIN")) {
             roles.add(roleService.findByName("ROLE_USER"));
         }

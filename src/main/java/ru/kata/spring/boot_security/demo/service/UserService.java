@@ -13,7 +13,7 @@ public interface UserService {
 
     void deleteUser(Long id);
 
-    void editUser(Long id,String username, String password, String lastName, Integer age, String email, String roleName);
+    void editUser(Long id, String username, String password, String lastName, Integer age, String email, String roleName);
 
     List<User> showUsers();
 }

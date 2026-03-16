@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,9 +17,9 @@
         <span class="navbar-text text-white">
             <strong th:text="${user.email}">admin@gmail.com</strong>
             with roles:
-           <span th:each="role : ${user.roles}" th:text="${role.name.replace('ROLE_', '') + ' '}"></span> USER
+           <span th:text="${#strings.replace(#strings.listJoin(#lists.sort(user.roles.![name]), ' '), 'ROLE_', '')}"> USER</span>
+
             </span>
-        </span>
 
         <form th:action="@{/logout}" method="post">
             <button type="submit" class="btn btn-link text-secondary text-decoration-none">
@@ -31,9 +32,21 @@
 <div class="d-flex">
 
 
-    <div class="nav flex-column nav-pills pt-3" style="width:200px; min-height:100vh;">
-        <a th:href="@{/admin}" class="nav-link active text-start">Admin</a>
-        <a th:href="@{/user}" class="nav-link text-start">User</a>
+    <div class="nav flex-column nav-pills" style="width:200px; min-height:100vh;" role="tablist">
+
+        <a class="nav-link"
+           sec:authorize="hasRole('ADMIN')"
+           th:classappend="${#httpServletRequest.requestURI == '/admin' ? 'active' : ''}"
+           th:href="@{/admin}">
+            Admin
+        </a>
+
+        <a class="nav-link"
+           sec:authorize="hasRole('USER')"
+           th:classappend="${#httpServletRequest.requestURI == '/user' ? 'active' : ''}"
+           th:href="@{/user}">
+            User
+        </a>
 
     </div>
 
@@ -90,7 +103,7 @@
                                 <td th:text="${user.lastName}"></td>
                                 <td th:text="${user.age}"></td>
                                 <td th:text="${user.email}"></td>
-                                <td th:text="${#strings.replace(#strings.listJoin(user.roles.![name], ', '), 'ROLE_', '')}"></td>
+                                <td th:text="${#strings.replace(#strings.listJoin(#lists.sort(user.roles.![name]), ' '), 'ROLE_', '')}"></td>
 
                                 <td>
                                     <button class="btn btn-sm  btn-info text-white"
@@ -154,9 +167,11 @@
                                                                class="form-control mb-2"
                                                                th:value="${user.email}">
 
-                                                        <input type="password"
+                                                        <label for="passwordInput"
+                                                               class="form-label fw-bold text-center d-block">Password </label>
+                                                        <input type="password" id="passwordInput"
                                                                name="password"
-                                                               class="form-control mb-2">
+                                                               class="form-control mb-2" readonly>
 
                                                         <div class="mb-3">
                                                             <label for="roleInput"
@@ -172,7 +187,7 @@
                                                             <button type="button" class="btn btn-secondary"
                                                                     data-bs-dismiss="modal">Close
                                                             </button>
-                                                            <button type="submit" class="btn  btn-info">Edit</button>
+                                                            <button type="submit" class="btn  btn-info text-white">Edit</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -240,6 +255,12 @@
                                                             <button type="submit" class="btn btn-danger">Delete</button>
                                                         </div>
                                                     </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </td>
                             </tr>
                             </tbody>
