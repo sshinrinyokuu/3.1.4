@@ -17,7 +17,7 @@
         <span class="navbar-text text-white">
             <strong th:text="${user.email}">admin@gmail.com</strong>
             with roles:
-           <span th:text="${#strings.replace(#strings.listJoin(#lists.sort(user.roles.![name]), ' '), 'ROLE_', '')}"> USER</span>
+           <span th:text="${#strings.replace(#strings.listJoin(#lists.sort(user.roles.![name]), ' '), 'ROLE_', '')}"> </span>
 
             </span>
 
