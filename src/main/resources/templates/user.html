@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      >
+>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,7 +22,6 @@
             <span th:text="${#strings.replace(#strings.listJoin(#lists.sort(user.roles.![name]), ' '), 'ROLE_', '')}"></span>
 
             </span>
-        </span>
 
         <form th:action="@{/logout}" method="post">
             <button type="submit" class="btn btn-link text-secondary text-decoration-none">

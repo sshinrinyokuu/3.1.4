@@ -19,5 +19,6 @@ public class UserInfoService implements UserDetailsService {
     public User loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
     }
 }

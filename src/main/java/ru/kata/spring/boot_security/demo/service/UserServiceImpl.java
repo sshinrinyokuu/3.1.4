@@ -4,6 +4,8 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.dto.UserResponseDto;
+import ru.kata.spring.boot_security.demo.dto.UserUpdateDto;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
@@ -12,6 +14,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -32,14 +35,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(String username, String password, String lastName, Integer age, String email, String roleName) {
+    public User saveUser(String username, String password, String lastName, Integer age, String email, String roleName) {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User(username, encodedPassword, lastName, age, email);
         Role role = roleService.findByName(roleName);
         Set<Role> roles = new LinkedHashSet<>();
         roles.add(role);
         user.setRoles(roles);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -48,8 +51,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void editUser(Long id, String username, String password, String lastName, Integer age, String email, String roleName) {
+    public User editUser(Long id, String username, String password, String lastName, Integer age, String email, String roleName) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        if (roleName == null || roleName.isEmpty()) { //УБРАТЬ ПОСЛЕ ТЕСТОВ//
+            throw new RuntimeException("ROLE IS NULL FROM FRONT");
+        }
         user.setUsername(username);
         user.setLastName(lastName);
         user.setAge(age);
@@ -65,9 +71,8 @@ public class UserServiceImpl implements UserService {
         }
         roles.add(role);
         user.setRoles(roles);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
-
 
     @Override
     public List<User> showUsers() {
