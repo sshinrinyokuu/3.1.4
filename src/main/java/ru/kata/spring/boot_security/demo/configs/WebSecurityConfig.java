@@ -30,8 +30,8 @@ public class WebSecurityConfig  {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeRequests()
-                .antMatchers("/admin", "/admin/**").hasRole("ADMIN")
-                .antMatchers("/user", "/user/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/login").permitAll()
                 .anyRequest().authenticated()
                 .and()

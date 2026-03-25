@@ -239,12 +239,12 @@
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                <td>${escapeHtml(user.id)}</td>
-                <td>${escapeHtml(user.username)}</td>
-                <td>${escapeHtml(user.lastName || '')}</td>
+                <td>${(user.id)}</td>
+                <td>${(user.username)}</td>
+                <td>${(user.lastName || '')}</td>
                 <td>${user.age || ''}</td>
-                <td>${escapeHtml(user.email)}</td>
-                <td>${escapeHtml(roles)}</td>
+                <td>${(user.email)}</td>
+                <td>${(roles)}</td>
                 <td><button class="btn btn-sm btn-info text-white" onclick="openEditModal(${user.id})">Edit</button></td>
                 <td><button class="btn btn-sm btn-danger" onclick="openDeleteModal(${user.id})">Delete</button></td>
             `;
@@ -351,10 +351,6 @@
 
         console.log('📤 POST /add:', userData);
 
-        if (!userData.username || !userData.email || !userData.password) {
-
-            return;
-        }
 
         try {
             const response = await fetch(`${API_URL}/add`, {
@@ -457,16 +453,6 @@
         }
     }
 
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-    }
 </script>
 </body>
 </html>

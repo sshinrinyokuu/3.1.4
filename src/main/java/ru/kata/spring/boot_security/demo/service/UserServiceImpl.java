@@ -53,9 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User editUser(Long id, String username, String password, String lastName, Integer age, String email, String roleName) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        if (roleName == null || roleName.isEmpty()) { //УБРАТЬ ПОСЛЕ ТЕСТОВ//
-            throw new RuntimeException("ROLE IS NULL FROM FRONT");
-        }
+
         user.setUsername(username);
         user.setLastName(lastName);
         user.setAge(age);
