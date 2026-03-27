@@ -10,7 +10,6 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +18,7 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
         roles.add(role);
         user.setRoles(roles);
         return userRepository.save(user);
+
     }
 
     @Override
@@ -75,5 +76,52 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> showUsers() {
         return userRepository.findAll();
+    }
+
+
+
+    @Override
+    public User saveUser(UserUpdateDto dto) {
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setLastName(dto.getLastName());
+        user.setAge(dto.getAge());
+        user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+
+        Set<Role> roles = dto.getRoleName().stream()
+                .map(roleService::findByName)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+        if (dto.getRoleName().contains("ROLE_ADMIN")) {
+            roles.add(roleService.findByName("ROLE_USER"));
+        }
+
+        user.setRoles(roles);
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User editUser(UserResponseDto dto) {
+        User user = userRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setUsername(dto.getUsername());
+        user.setLastName(dto.getLastName());
+        user.setAge(dto.getAge());
+        user.setEmail(dto.getEmail());
+
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        Set<Role> roles = dto.getRoleName().stream()
+                .map(roleService::findByName)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        user.setRoles(roles);
+
+        return userRepository.save(user);
     }
 }
