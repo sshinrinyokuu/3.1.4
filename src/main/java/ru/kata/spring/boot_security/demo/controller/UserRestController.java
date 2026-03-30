@@ -14,7 +14,6 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 @RequestMapping("api/user")
 public class UserRestController {
 
-
     @GetMapping
     public UserResponseDto getCurrentUser(@AuthenticationPrincipal User user) {
         return new UserResponseDto(user);

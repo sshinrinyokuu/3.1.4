@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
@@ -30,58 +31,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public List<UserResponseDto> showUsers() {
+        return userRepository.findAll().stream()
+                .map(UserResponseDto::new)
+                .toList();
     }
 
     @Override
-    public User saveUser(String username, String password, String lastName, Integer age, String email, String roleName) {
-        String encodedPassword = passwordEncoder.encode(password);
-        User user = new User(username, encodedPassword, lastName, age, email);
-        Role role = roleService.findByName(roleName);
-        Set<Role> roles = new LinkedHashSet<>();
-        roles.add(role);
-        user.setRoles(roles);
-        return userRepository.save(user);
-
-    }
-
-    @Override
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
-
-    @Override
-    public User editUser(Long id, String username, String password, String lastName, Integer age, String email, String roleName) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-
-        user.setUsername(username);
-        user.setLastName(lastName);
-        user.setAge(age);
-        user.setEmail(email);
-
-        if (password != null && !password.isEmpty()) {
-            user.setPassword(passwordEncoder.encode(password));
-        }
-        Role role = roleService.findByName(roleName);
-        Set<Role> roles = new LinkedHashSet<>();
-        if(roleName.equals("ROLE_ADMIN")) {
-            roles.add(roleService.findByName("ROLE_USER"));
-        }
-        roles.add(role);
-        user.setRoles(roles);
-        return userRepository.save(user);
-    }
-
-    @Override
-    public List<User> showUsers() {
-        return userRepository.findAll();
-    }
-
-
-
-    @Override
-    public User saveUser(UserUpdateDto dto) {
+    public UserUpdateDto saveUser(UserUpdateDto dto) {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setLastName(dto.getLastName());
@@ -89,21 +46,22 @@ public class UserServiceImpl implements UserService {
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-
         Set<Role> roles = dto.getRoleName().stream()
                 .map(roleService::findByName)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
+
         if (dto.getRoleName().contains("ROLE_ADMIN")) {
             roles.add(roleService.findByName("ROLE_USER"));
         }
 
         user.setRoles(roles);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return new UserUpdateDto(savedUser);
     }
 
     @Override
-    public User editUser(UserResponseDto dto) {
+    public UserResponseDto editUser(UserResponseDto dto) {
         User user = userRepository.findById(dto.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -120,8 +78,23 @@ public class UserServiceImpl implements UserService {
                 .map(roleService::findByName)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
+        if (dto.getRoleName().contains("ROLE_ADMIN")) {
+            roles.add(roleService.findByName("ROLE_USER"));
+        }
+
         user.setRoles(roles);
 
-        return userRepository.save(user);
+        User updatedUser = userRepository.save(user);
+        return new UserResponseDto(updatedUser);
+    }
+
+    @Override
+    public void deleteUser(UserResponseDto dto) {
+        userRepository.deleteById(dto.getId());
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 }

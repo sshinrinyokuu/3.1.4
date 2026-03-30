@@ -10,14 +10,10 @@ import java.util.List;
 
 
 public interface UserService {
+    List<UserResponseDto> showUsers();
+    UserUpdateDto saveUser(UserUpdateDto dto);
+    UserResponseDto editUser(UserResponseDto dto);
+    void deleteUser(UserResponseDto dto);
     User findById(Long id);
-    User saveUser(String username, String password, String lastName, Integer age, String email, String roleName);
-    void deleteUser(Long id);
-    User editUser(Long id, String username, String password, String lastName, Integer age, String email, String roleName);
-    List<User> showUsers();
 
-
-
-    User saveUser(UserUpdateDto dto);
-    User editUser(UserResponseDto dto);
 }

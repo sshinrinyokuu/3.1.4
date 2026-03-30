@@ -21,25 +21,23 @@ public class AdminRestController {
 
     @GetMapping
     public List<UserResponseDto> getAllUsers() {
-        return userService.showUsers().stream()
-                .map(UserResponseDto::new)
-                .toList();
+        return userService.showUsers();
     }
 
     @PostMapping("/add")
-    public UserUpdateDto addUser(@RequestBody UserUpdateDto dto) {
-        return new UserUpdateDto(userService.saveUser(dto));
+    public UserUpdateDto addUser(@RequestBody UserUpdateDto userDto) {
+        return userService.saveUser(userDto);
     }
 
     @PutMapping("/edit")
     public UserResponseDto editUser(@RequestBody UserResponseDto dto) {
-        return new UserResponseDto(userService.editUser(dto));
+        return userService.editUser(dto);
 
     }
 
     @DeleteMapping("/delete")
     public void deleteUser(@RequestBody UserResponseDto dto) {
-        userService.deleteUser(dto.getId());
+        userService.deleteUser(dto);
     }
 
 }

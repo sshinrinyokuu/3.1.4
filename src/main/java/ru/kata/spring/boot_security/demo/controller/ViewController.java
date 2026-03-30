@@ -9,7 +9,6 @@ import ru.kata.spring.boot_security.demo.model.User;
 @Controller
 public class ViewController {
 
-
     @GetMapping("/admin")
     public String showAdminPage(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
